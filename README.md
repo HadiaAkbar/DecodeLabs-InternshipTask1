@@ -23,13 +23,30 @@ The project follows the **IPO (Input-Process-Output)** model:
 
 ## How to Run
 
+### Option 1: Web Interface (Recommended)
+Visit the live web interface at: **[DecodeLabs Chatbot](https://decodelabs-chatbot.manus.space)**
+
+### Option 2: Command-Line Interface
 Ensure you have Python installed, then execute the script:
 
 ```bash
 python3 chatbot.py
 ```
 
+## Web Interface
+
+A modern web-based interface for the chatbot has been deployed on Manus. You can interact with the chatbot through a clean, user-friendly chat interface:
+
+**Live Demo:** [DecodeLabs Chatbot Web Interface](https://decodelabs-chatbot.manus.space)
+
+The web interface includes:
+- Real-time chat messaging with timestamps
+- Message history and scrollable conversation view
+- Typing indicators for better UX
+- Information cards explaining the chatbot's functionality
+- Responsive design for desktop and mobile devices
+
 ## Repository Structure
 
-- `chatbot.py`: The main implementation of the rule-based chatbot.
+- `chatbot.py`: The main implementation of the rule-based chatbot (Python CLI version).
 - `README.md`: Project documentation and instructions.
