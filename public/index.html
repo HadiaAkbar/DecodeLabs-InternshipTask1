@@ -158,19 +158,6 @@
     button:active {
       transform: scale(0.98);
     }
-    .welcome { 
-      color: #666; 
-      font-style: italic; 
-      text-align: center; 
-      padding: 20px;
-    }
-    .scrollbar-hint {
-      font-size: 12px;
-      color: #999;
-      text-align: center;
-      padding: 8px;
-      font-style: italic;
-    }
   </style>
 </head>
 <body>
@@ -210,25 +197,28 @@
       chatBox.appendChild(typingDiv);
       chatBox.scrollTop = chatBox.scrollHeight;
 
-      // Simulate processing delay (50-300ms for rule-based lookup)
-      await new Promise(resolve => setTimeout(resolve, Math.random() * 250 + 50));
+      // Simulate processing delay
+      await new Promise(resolve => setTimeout(resolve, Math.random() * 300 + 200));
 
       // Get bot response
       try {
+        // Use relative path but ensure it points to the correct endpoint
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message })
         });
         
+        // Remove typing indicator
+        if (chatBox.contains(typingDiv)) {
+          chatBox.removeChild(typingDiv);
+        }
+
         if (!res.ok) {
-          throw new Error('Server responded with status ' + res.status);
+          throw new Error('Server error: ' + res.status);
         }
         
         const data = await res.json();
-        
-        // Remove typing indicator
-        chatBox.removeChild(typingDiv);
         
         if (data.response) {
           addMessage(data.response, 'bot');
@@ -241,7 +231,7 @@
         if (chatBox.contains(typingDiv)) {
           chatBox.removeChild(typingDiv);
         }
-        addMessage('Error connecting to server: ' + err.message, 'bot');
+        addMessage('Error: ' + err.message + '. Please ensure the server is running.', 'bot');
       }
     }
 
@@ -259,15 +249,12 @@
       return div.innerHTML;
     }
 
-    // Allow Enter key to send message
     userInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
+      if (e.key === 'Enter') {
         sendMessage();
       }
     });
 
-    // Focus input on page load
     userInput.focus();
   </script>
 </body>
