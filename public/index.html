@@ -4,176 +4,304 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DecodeLabs Rule-Based AI Chatbot</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --primary-green: #10b981;
+      --dark-green: #059669;
+      --light-green: #d1fae5;
+      --bg-light: #f0fdf4;
+      --text-dark: #1f2937;
+      --text-light: #6b7280;
+    }
+
     body { 
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; 
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
       min-height: 100vh; 
       display: flex; 
       align-items: center; 
       justify-content: center;
       padding: 20px;
     }
+
     .container { 
       width: 100%; 
-      max-width: 600px; 
+      max-width: 700px; 
       background: white; 
-      border-radius: 12px; 
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3); 
+      border-radius: 16px; 
+      box-shadow: 0 25px 50px rgba(16, 185, 129, 0.15),
+                  0 15px 35px rgba(0, 0, 0, 0.1);
       overflow: hidden; 
       display: flex;
       flex-direction: column;
       height: 90vh;
-      max-height: 700px;
+      max-height: 750px;
     }
+
     .header { 
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
       color: white; 
-      padding: 24px; 
+      padding: 28px 24px;
       text-align: center;
-      border-bottom: 3px solid #5568d3;
+      position: relative;
+      border-bottom: none;
     }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 12px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      filter: blur(8px);
+      opacity: 0.5;
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+
     .header h1 { 
-      font-size: 24px; 
-      margin-bottom: 4px; 
+      font-size: 26px; 
+      margin-bottom: 6px; 
       font-weight: 700;
+      letter-spacing: -0.5px;
     }
+
     .header p { 
-      opacity: 0.9; 
-      font-size: 14px;
+      opacity: 0.92; 
+      font-size: 13px;
       font-weight: 500;
+      letter-spacing: 0.3px;
     }
+
     .chat-box { 
       flex: 1;
       overflow-y: auto; 
-      padding: 20px; 
-      background: #f7f7f7;
+      padding: 24px 20px;
+      background: #f9fafb;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
     }
+
+    .chat-box::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .chat-box::-webkit-scrollbar-track {
+      background: #f0fdf4;
+    }
+
+    .chat-box::-webkit-scrollbar-thumb {
+      background: #10b981;
+      border-radius: 3px;
+    }
+
+    .chat-box::-webkit-scrollbar-thumb:hover {
+      background: #059669;
+    }
+
     .message { 
       display: flex;
-      animation: slideIn 0.3s ease-out;
+      animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
+
     @keyframes slideIn {
       from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(12px);
       }
       to {
         opacity: 1;
         transform: translateY(0);
       }
     }
+
     .message.bot { 
       justify-content: flex-start; 
     }
+
     .message.user { 
       justify-content: flex-end; 
     }
+
     .message-bubble { 
-      max-width: 70%; 
-      padding: 12px 16px; 
-      border-radius: 12px; 
+      max-width: 75%; 
+      padding: 14px 18px; 
+      border-radius: 14px; 
       font-size: 14px; 
-      line-height: 1.4;
+      line-height: 1.5;
       word-wrap: break-word;
+      font-weight: 500;
     }
+
     .bot .message-bubble { 
-      background: #e0e0e0; 
-      color: #333; 
-      border-radius: 12px 12px 12px 0;
+      background: white;
+      color: var(--text-dark);
+      border-radius: 14px 14px 14px 2px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      border-left: 3px solid var(--primary-green);
     }
+
     .user .message-bubble { 
-      background: #667eea; 
+      background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
       color: white; 
-      border-radius: 12px 12px 0 12px;
+      border-radius: 14px 14px 2px 14px;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
     }
+
     .typing-indicator {
       display: flex;
-      gap: 4px;
-      padding: 12px 16px;
-      background: #e0e0e0;
-      border-radius: 12px;
+      gap: 6px;
+      padding: 14px 18px;
+      background: white;
+      border-radius: 14px 14px 14px 2px;
       width: fit-content;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      border-left: 3px solid var(--primary-green);
     }
+
     .typing-dot {
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
-      background: #999;
+      background: var(--primary-green);
       animation: typing 1.4s infinite;
     }
+
     .typing-dot:nth-child(2) {
       animation-delay: 0.2s;
     }
+
     .typing-dot:nth-child(3) {
       animation-delay: 0.4s;
     }
+
     @keyframes typing {
       0%, 60%, 100% {
-        opacity: 0.5;
+        opacity: 0.4;
         transform: translateY(0);
       }
       30% {
         opacity: 1;
-        transform: translateY(-10px);
+        transform: translateY(-12px);
       }
     }
+
     .input-area { 
-      padding: 16px; 
-      border-top: 1px solid #e0e0e0; 
+      padding: 16px 20px;
+      border-top: 1px solid #e5e7eb; 
       display: flex; 
-      gap: 8px;
+      gap: 12px;
       background: white;
     }
+
     input { 
       flex: 1; 
-      padding: 12px; 
-      border: 1px solid #ddd; 
-      border-radius: 8px; 
+      padding: 12px 16px; 
+      border: 1.5px solid #e5e7eb; 
+      border-radius: 10px; 
       font-size: 14px;
-      transition: border-color 0.2s;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      color: var(--text-dark);
+      background: #fafbfc;
     }
+
+    input::placeholder {
+      color: var(--text-light);
+    }
+
     input:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      border-color: var(--primary-green);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
     }
+
     button { 
-      padding: 12px 24px; 
-      background: #667eea; 
+      padding: 12px 28px; 
+      background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
       color: white; 
       border: none; 
-      border-radius: 8px; 
+      border-radius: 10px; 
       cursor: pointer; 
       font-weight: 600;
-      transition: background 0.2s;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
     }
+
     button:hover { 
-      background: #5568d3; 
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
     }
+
     button:active {
-      transform: scale(0.98);
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
+    }
+
+    .send-icon {
+      font-size: 16px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        max-height: none;
+        height: 100vh;
+        border-radius: 0;
+      }
+
+      .message-bubble {
+        max-width: 85%;
+      }
+
+      .header h1 {
+        font-size: 22px;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 13px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>🤖 DecodeLabs Chatbot</h1>
-      <p>Rule-Based AI Assistant</p>
+      <div class="header-content">
+        <div class="header-icon">🤖</div>
+        <h1>DecodeLabs AI Assistant</h1>
+        <p>Rule-Based Intelligence Engine</p>
+      </div>
     </div>
     <div class="chat-box" id="chatBox">
       <div class="message bot">
-        <div class="message-bubble">Welcome! I'm a rule-based AI chatbot. Try asking: "hello", "what is ai", "tell me a joke", or "help"</div>
+        <div class="message-bubble">Welcome to DecodeLabs! I'm your intelligent assistant. Try: "hello", "what is ai", "tell me a joke", or "help"</div>
       </div>
     </div>
     <div class="input-area">
-      <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off" />
-      <button onclick="sendMessage()">Send</button>
+      <input type="text" id="userInput" placeholder="Ask me anything..." autocomplete="off" />
+      <button onclick="sendMessage()"><i class="fas fa-paper-plane send-icon"></i></button>
     </div>
   </div>
 
@@ -181,81 +309,79 @@
     const chatBox = document.getElementById('chatBox');
     const userInput = document.getElementById('userInput');
 
-    async function sendMessage() {
+    function sendMessage() {
       const message = userInput.value.trim();
       if (!message) return;
 
       // Add user message
-      addMessage(message, 'user');
+      const userMessageDiv = document.createElement('div');
+      userMessageDiv.className = 'message user';
+      userMessageDiv.innerHTML = `<div class="message-bubble">${escapeHtml(message)}</div>`;
+      chatBox.appendChild(userMessageDiv);
       userInput.value = '';
-      userInput.focus();
+      chatBox.scrollTop = chatBox.scrollHeight;
 
       // Show typing indicator
       const typingDiv = document.createElement('div');
       typingDiv.className = 'message bot';
-      typingDiv.innerHTML = '<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+      typingDiv.innerHTML = `
+        <div class="typing-indicator">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      `;
       chatBox.appendChild(typingDiv);
       chatBox.scrollTop = chatBox.scrollHeight;
 
-      // Simulate processing delay
-      await new Promise(resolve => setTimeout(resolve, Math.random() * 300 + 200));
-
       // Get bot response
       try {
-        // Use relative path but ensure it points to the correct endpoint
-        const res = await fetch('/api/chatbot', {
+        const res = fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message })
         });
         
-        // Remove typing indicator
-        if (chatBox.contains(typingDiv)) {
-          chatBox.removeChild(typingDiv);
-        }
+        res.then(response => response.json()).then(data => {
+          // Remove typing indicator
+          typingDiv.remove();
 
-        if (!res.ok) {
-          throw new Error('Server error: ' + res.status);
-        }
-        
-        const data = await res.json();
-        
-        if (data.response) {
-          addMessage(data.response, 'bot');
-        } else {
-          addMessage('Received unexpected response from server', 'bot');
-        }
-      } catch (err) {
-        console.error('Fetch error:', err);
-        // Remove typing indicator
-        if (chatBox.contains(typingDiv)) {
-          chatBox.removeChild(typingDiv);
-        }
-        addMessage('Error: ' + err.message + '. Please ensure the server is running.', 'bot');
+          // Add bot response
+          const botMessageDiv = document.createElement('div');
+          botMessageDiv.className = 'message bot';
+          botMessageDiv.innerHTML = `<div class="message-bubble">${escapeHtml(data.reply)}</div>`;
+          chatBox.appendChild(botMessageDiv);
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }).catch(error => {
+          typingDiv.remove();
+          const errorDiv = document.createElement('div');
+          errorDiv.className = 'message bot';
+          errorDiv.innerHTML = `<div class="message-bubble">Sorry, I couldn't process your message. Please try again.</div>`;
+          chatBox.appendChild(errorDiv);
+        });
+      } catch (error) {
+        typingDiv.remove();
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'message bot';
+        errorDiv.innerHTML = `<div class="message-bubble">Error connecting to the server.</div>`;
+        chatBox.appendChild(errorDiv);
       }
-    }
-
-    function addMessage(text, sender) {
-      const msgDiv = document.createElement('div');
-      msgDiv.className = 'message ' + sender;
-      msgDiv.innerHTML = '<div class="message-bubble">' + escapeHtml(text) + '</div>';
-      chatBox.appendChild(msgDiv);
-      chatBox.scrollTop = chatBox.scrollHeight;
     }
 
     function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+      return text.replace(/[&<>"']/g, m => map[m]);
     }
 
     userInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        sendMessage();
-      }
+      if (e.key === 'Enter') sendMessage();
     });
-
-    userInput.focus();
   </script>
 </body>
 </html>
