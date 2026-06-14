@@ -2,10 +2,10 @@
   "name": "decodelabs-chatbot",
   "version": "1.0.0",
   "description": "Rule-Based AI Chatbot - Project 1",
-  "main": "api/chatbot.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node api/chatbot.js",
-    "dev": "node api/chatbot.js"
+    "start": "node server.js",
+    "dev": "node server.js"
   },
   "keywords": ["ai", "chatbot", "rule-based"],
   "author": "DecodeLabs",
