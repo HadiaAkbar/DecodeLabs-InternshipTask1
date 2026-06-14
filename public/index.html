@@ -164,7 +164,7 @@
   <div class="container">
     <div class="header">
       <h1>🤖 DecodeLabs Chatbot</h1>
-      <p>Rule-Based AI Assistant | Project 1</p>
+      <p>Rule-Based AI Assistant</p>
     </div>
     <div class="chat-box" id="chatBox">
       <div class="message bot">
@@ -203,7 +203,7 @@
       // Get bot response
       try {
         // Use relative path but ensure it points to the correct endpoint
-        const res = await fetch('/api/chat', {
+        const res = await fetch('/api/chatbot', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message })
