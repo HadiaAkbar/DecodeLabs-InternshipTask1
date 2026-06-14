@@ -1,9 +1,7 @@
 {
-  "buildCommand": "npm install",
+  "version": 2,
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/chatbot.js"
-    }
-  ]
+    { "source": "/api/(.*)", "destination": "/api/chatbot.js" }
+  ],
+  "cleanUrls": true
 }
