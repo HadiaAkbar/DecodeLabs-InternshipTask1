@@ -56,10 +56,20 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message })
         });
+        
+        if (!res.ok) {
+          throw new Error('Server responded with status ' + res.status);
+        }
+        
         const data = await res.json();
-        addMessage(data.response, 'bot');
+        if (data.response) {
+          addMessage(data.response, 'bot');
+        } else {
+          addMessage('Received unexpected response from server', 'bot');
+        }
       } catch (err) {
-        addMessage('Error connecting to server', 'bot');
+        console.error('Fetch error:', err);
+        addMessage('Error connecting to server: ' + err.message, 'bot');
       }
     }
 
